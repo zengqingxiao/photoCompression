@@ -9,7 +9,7 @@ export function compressImages(obj) {
     // 文件base64化，以便获知图片原始尺寸
     reader.onload = function (e) {
       img.src = e.target.result;
-      obj.compressBeforeShiftBase64(e.target.result)
+      obj.compressBeforeShiftBase64 && obj.compressBeforeShiftBase64(e.target.result)
     };
     // 缩放图片需要的canvas
     let canvas = document.createElement('canvas');
@@ -41,13 +41,13 @@ export function compressImages(obj) {
       context.clearRect(0, 0, targetWidth, targetHeight);
       // 图片压缩
       context.drawImage(img, 0, 0, targetWidth, targetHeight);
-      obj.compressAfterShiftBase64 && obj.compressAfterShiftBase64(canvas.toDataURL(obj.base64MimeType || file.type || 'image/png', obj.base64QualityArgument|| 0.92))
+      obj.compressAfterShiftBase64 && obj.compressAfterShiftBase64(canvas.toDataURL(obj.base64MimeType || obj.file.type || 'image/png', obj.base64QualityArgument|| 0.92))
       // canvas转为blob并上传
       // 将当前画布转为Blob文件（二进制）文件后产生回调
       canvas.toBlob(function (blob) {
-        obj.compressAfterShiftBolb() // 转为canvas
+        obj.compressAfterShiftBolb && obj.compressAfterShiftBolb() // 转为canvas
         resolve(blob)
-      }, obj.bolbMimeType || file.type || 'image/png', obj.bolbQualityArgument|| 0.92);
+      }, obj.bolbMimeType || obj.file.type || 'image/png', obj.bolbQualityArgument|| 0.92);
     };
   })
 }
